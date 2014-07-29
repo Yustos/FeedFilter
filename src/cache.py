@@ -3,8 +3,8 @@ from CodernityDB.database import Database
 from CodernityDB.hash_index import HashIndex
 import struct
 
-class WithXIndex(HashIndex):
 
+class WithXIndex(HashIndex):
     def __init__(self, *args, **kwargs):
         kwargs['key_format'] = 's'
         super(WithXIndex, self).__init__(*args, **kwargs)
@@ -18,6 +18,7 @@ class WithXIndex(HashIndex):
     def make_key(self, key):
         return key
 
+
 class Cache():
     def __init__(self):
         db = Database('db')
@@ -27,7 +28,6 @@ class Cache():
             db.create()
             x_ind = WithXIndex(db.path, 'urlidx')
             db.add_index(x_ind)
-        #db.destroy()
         self._db = db
 
     def add(self, url, tags):

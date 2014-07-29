@@ -1,28 +1,26 @@
 # -*- coding: utf-8 *-*
-import tornado.ioloop
-import tornado.web
+from tornado.ioloop import IOLoop
+from tornado.web import RequestHandler, Application, url
 import processor
 
 
-class MainHandler(tornado.web.RequestHandler):
+class MainHandler(RequestHandler):
     def get(self):
-        print("Feed requested")
-        p = processor.Processor()
-        xml = p.Parse(u"http://some_url_from_parameter")
-        self.write(xml)
-        print("Feed sended")
-        #print "Request coming..."
-        #self.write("Hello")
-        #print "Reply sended."
+        self.write("FeedFilter")
 
-application = tornado.web.Application([
-    (r"/", MainHandler),
+
+class FilterHandler(RequestHandler):
+    def get(self, url):
+        p = processor.Processor()
+        xml = p.Parse(url)
+        self.write(xml)
+
+application = Application([
+    url(r"/", MainHandler),
+    url(r"/filter/(.*)", FilterHandler, name="filter")
 ])
 
 if __name__ == "__main__":
-    p = processor.Processor()
-    p.Parse(u"http://some_url_for_test")
-    print "Initializing"
-    #application.listen(8888)
-    #tornado.ioloop.IOLoop.instance().start()
-    print "Stopped"
+    application.listen(9356)
+    IOLoop.instance().start()
+
