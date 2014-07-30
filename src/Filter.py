@@ -16,14 +16,12 @@ class Processor():
         feed = feedparser.parse(url)
         for entry in feed.entries:
             articleUrl = entry.links[0].href
-            if self._cache.check(articleUrl):
-                print("already in cache: %s" % articleUrl)
-            else:
-                tags = self.AcquireTags(entry)
+            if not self._cache.check(articleUrl):
+                tags = self.AcquireTags(articleUrl)
                 self._cache.add(articleUrl, tags)
         return self.MapFeed(feed)
 
-    def AcquireTags(self, articleUrl, entry):
+    def AcquireTags(self, articleUrl):
         html = urllib2.urlopen(articleUrl)
         soup = BeautifulSoup(html)
         tagContainer = soup.find("span", "story_tag_list")
@@ -41,7 +39,6 @@ class Processor():
             description="Reprocessed feed",
             lastBuildDate=datetime.datetime.now(),
             items=items)
-        #rss.write_xml(open("out1.xml", "w"))
         xml = rss.to_xml()
         return xml
 

@@ -1,8 +1,7 @@
 # -*- coding: utf-8 *-*
 from tornado.ioloop import IOLoop
 from tornado.web import RequestHandler, Application, url
-import processor
-
+import Filter
 
 class MainHandler(RequestHandler):
     def get(self):
@@ -11,7 +10,7 @@ class MainHandler(RequestHandler):
 
 class FilterHandler(RequestHandler):
     def get(self, url):
-        p = processor.Processor()
+        p = Filter.Processor()
         xml = p.Parse(url)
         self.write(xml)
 
@@ -23,4 +22,3 @@ application = Application([
 if __name__ == "__main__":
     application.listen(9356)
     IOLoop.instance().start()
-
