@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{{ title }}</title>
+    <link href="/static/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+</head>
+<body>
+    <div class="container" ng-app="settings" ng-controller="settingsController as vm">
+        <div class="row">
+            <div class="col-md-12">
+                <table class="table table-bordered table-hover">
+                    <tr ng-repeat="item in vm.items">
+                        <td ng-bind="item.name"></td>
+                        <td ng-bind="item.value"></td>
+                        <td><a href="" class="btn btn-danger btn-xs" ng-click="vm.Delete(item)">Delete</a></td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <form role="form" action="/settings/" method="POST">
+                    <div class="form-group">
+                        <label>Name: <input class="form-control" type="text" name="name" ng-model="vm.newSettings.name" /></label>
+                    </div>
+                    <div class="form-group">
+                        <label>Value: <input class="form-control" type="text" name="value" ng-model="vm.newSettings.value" /></label>
+                    </div>
+                    <button class="btn btn-default" type="button" ng-click="vm.Save()">Save</button>
+                </form>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript" src="/static/jquery/jquery-2.1.1.min.js"></script>
+    <script type="text/javascript" src="/static/angular/angular.min.js"></script>
+    <script type="text/javascript" src="/static/angular/angular-resource.min.js"></script>
+    
+    <script type="text/javascript" src="/static/app/settings.js"></script>
+</body>
+</html>
