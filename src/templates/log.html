@@ -11,9 +11,17 @@
                 <table class="table table-bordered table-hover">
                     {% for item in items %}
                     <tr class="{{'danger' if item['client'] == 'error' else ''}}">
-                        <td>{{item['date']}}</td>
+                        <td style="white-space: nowrap;">{{item["localDate"]}}</td>
                         <td>{{item['client']}}</td>
-                        <td>{{item['message']}}</td>
+                        <td>
+                            {% if item['client'] == 'error' %}
+                            <pre>
+                                <code>{{item['message']}}</code>
+                            </pre>
+                            {% else %}
+                            {{item['message']}}
+                            {% end %}
+                        </td>
                     </tr>
                     {% end %}
                 </table>

@@ -17,7 +17,10 @@ class Processor():
         proxy = urllib2.ProxyHandler( {} )
         feed = feedparser.parse(url, handlers = [proxy])
         if feed["bozo"]:
-            log.app_log.error(feed['feed']['summary'])
+            if "summary" in feed["feed"]:
+                log.app_log.error(feed["feed"]["summary"])
+            if "bozo_exception" in feed:
+                log.app_log.error("Bozo ex: %s" % feed["bozo_exception"])
             return
         entries = []
         for entry in feed.entries:

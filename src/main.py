@@ -17,10 +17,9 @@ class MainHandler(RequestHandler):
 
 
 class FilterHandler(RequestHandler):
-    def get(self, url):
-        #warning Url parsing
-        url = self.request.uri.replace("/filter/", "", 1)
+    def get(self, name):
         settings = Settings.Settings()
+        url = settings.getItem(name)[0]
         blacklist = settings.getItem("blacklist")
         p = Filter.Processor(blacklist)
         xml = p.Parse(url)
@@ -32,13 +31,13 @@ class CacheHandler(RequestHandler):
         self._cache = settings = Cache.Cache()
         return super(CacheHandler, self).__init__(application, request, **kwargs)
 
-    def get(self, sec):
+    def get(self):
         items = self._cache.get()
         self.render(os.path.join("templates", "cache.html"), title="Cache", items=items)
 
 class LogHandler(RequestHandler):
-    def get(self, sec):
-        items = logInstance.get()
+    def get(self, count):
+        items = logInstance.get(count)
         self.render(os.path.join("templates", "log.html"), title="Log", items=items)
 
 class SettingsHandler(RequestHandler):
@@ -46,7 +45,7 @@ class SettingsHandler(RequestHandler):
         self._settings = Settings.Settings()
         return super(SettingsHandler, self).__init__(application, request, **kwargs)
 
-    def get(self, sec):
+    def get(self):
         self._render()
 
     def _render(self):
@@ -87,20 +86,20 @@ settings = {
 application = Application([
     url(r"/", MainHandler),
     url(r"/filter/(.*)", FilterHandler, name="filter"),
-    url(r"/cache/(.*)", CacheHandler, name="cache"),
+    url(r"/cache/", CacheHandler, name="cache"),
     url(r"/log/(.*)", LogHandler, name="log"),
-    url(r"/settings/(.*)", SettingsHandler, name="settings"),
+    url(r"/settings/", SettingsHandler, name="settings"),
     url(r"/api/settings", SettingsServiceHandler, name="settingsService"),
 ], **settings)
 
 
-class LogHandler(logging.Handler):
+class LoggerHandler(logging.Handler):
     def emit(self, record):
         logInstance.add(time.time(), "error", self.format(record))
 
 if __name__ == "__main__":
     application.listen(9357)
     logInstance.add(time.time(), "local", "Start")
-    log.app_log.addHandler(LogHandler())
+    log.app_log.addHandler(LoggerHandler())
     IOLoop.instance().start()
     
