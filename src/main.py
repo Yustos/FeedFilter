@@ -28,7 +28,7 @@ class FilterHandler(RequestHandler):
 
 class CacheHandler(RequestHandler):
     def __init__(self, application, request, **kwargs):
-        self._cache = settings = Cache.Cache()
+        self._cache = Cache.Cache()
         return super(CacheHandler, self).__init__(application, request, **kwargs)
 
     def get(self):
@@ -53,7 +53,7 @@ class SettingsHandler(RequestHandler):
 
 class SettingsServiceHandler(RequestHandler):
     def __init__(self, application, request, **kwargs):
-        self._settings = settings = Settings.Settings()
+        self._settings = Settings.Settings()
         return super(SettingsServiceHandler, self).__init__(application, request, **kwargs)
 
     def get(self):
